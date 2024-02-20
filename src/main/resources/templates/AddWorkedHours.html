@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Add Worked Hours</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>Add Worked Hours for Employee</h1>
+<form id="addWorkedHoursForm">
+  <input type="number" id="employee_id" name="employee_id" placeholder="Employee ID" required />
+  <input type="number" id="worked_hours" name="worked_hours" placeholder="Worked Hours" required />
+  <input type="date" id="worked_date" name="worked_date" placeholder="Worked Date" value="2024-02-20" required />
+  <button type="button" id="submitWorkedHours">Add Worked Hours</button>
+</form>
+
+<script>
+  document.getElementById("submitWorkedHours").addEventListener("click", function() {
+    var formData = {
+      "employeeId": document.getElementById("employee_id").value,
+      "workedHours": document.getElementById("worked_hours").value,
+      "workedDate": document.getElementById("worked_date").value
+    };
+
+    $.ajax({
+      url: 'http://localhost:8080/api/employeeWorkedHours/addEmployeeWorkedHours',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(formData),
+      success: function(response) {
+        response.hasOwnProperty("success").valueOf() ? alert(JSON.stringify(response)) : alert(response.error);
+      },
+      error: function() {
+        alert('Error adding worked hours.');
+      }
+    });
+  });
+</script>
+</body>
+</html>

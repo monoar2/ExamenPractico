@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add New Employee</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>Add New Employee</h1>
+<form id="addEmployeeForm">
+    <input type="number" id="gender_id" name="gender_id" placeholder="Gender ID" required />
+    <input type="number" id="job_id" name="job_id" placeholder="Job ID" required />
+    <input type="text" id="name" name="name" placeholder="Name" required />
+    <input type="text" id="last_name" name="last_name" placeholder="Last Name" required />
+    <input type="date" id="birthdate" name="birthdate" placeholder="Birthdate" value="2005-01-01" required />
+    <button type="button" id="submitEmployee">Add Employee</button>
+</form>
+
+<script>
+    document.getElementById("submitEmployee").addEventListener("click", function() {
+        var formData = {
+            "name": document.getElementById("name").value,
+            "lastName": document.getElementById("last_name").value,
+            "birthdate": document.getElementById("birthdate").value,
+            "genderId": document.getElementById("gender_id").value,
+            "jobId": document.getElementById("job_id").value
+        };
+
+        $.ajax({
+            url: 'http://localhost:8080/api/employees/addEmployees',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                if (response) {
+                    response.hasOwnProperty("success").valueOf() ? alert(JSON.stringify(response)) : alert(response.error);
+                }
+            },
+            error: function() {
+                alert('Error adding employee.');
+            }
+        });
+    });
+</script>
+</body>
+</html>

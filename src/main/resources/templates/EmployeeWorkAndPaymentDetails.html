@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Employee Work and Payment Details</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>Employee Work and Payment Details</h1>
+<form id="employeeDetailsForm">
+  <input type="number" id="employee_id" name="employee_id" placeholder="Employee ID" required />
+  <input type="date" id="start_date" name="start_date" placeholder="Start Date" required />
+  <input type="date" id="end_date" name="end_date" placeholder="End Date" required />
+  <button type="button" id="submitWorkedHours">Get Total Worked Hours</button>
+  <button type="button" id="submitPayment">Get Payment</button>
+</form>
+
+<script>
+  document.getElementById("submitWorkedHours").addEventListener("click", function() {
+    sendRequest('getTotalWorkedHours');
+  });
+
+  document.getElementById("submitPayment").addEventListener("click", function() {
+    sendRequest('getTotalPayments');
+  });
+
+  function sendRequest(type) {
+    var employeeId = document.getElementById("employee_id").value;
+    var startDate = document.getElementById("start_date").value;
+    var endDate = document.getElementById("end_date").value;
+
+    var url = 'http://localhost:8080/api/employeeWorkedHours/' + type
+            + '?employeeId=' + encodeURIComponent(employeeId)
+            + '&startDate=' + encodeURIComponent(startDate)
+            + '&endDate=' + encodeURIComponent(endDate);
+
+    $.ajax({
+      url: url,
+      type: 'GET', // Correct for fetching data
+      success: function(response) {
+        if(response.success) {
+          alert(JSON.stringify(response));
+        } else {
+          alert('Failed to fetch details.');
+        }
+      },
+      error: function() {
+        alert('Error fetching details.');
+      }
+    });
+  }
+</script>
+</body>
+</html>

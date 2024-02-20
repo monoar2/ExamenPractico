@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Employees by Job</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>Get Employees by Job ID</h1>
+<form id="getEmployeesByJobForm">
+  <input type="number" id="job_id" name="job_id" placeholder="Job ID" required />
+  <button type="button" id="submitJobId">Get Employees</button>
+</form>
+<div id="employeesList">
+  <!-- The employees details will be listed here -->
+</div>
+
+<script>
+  document.getElementById("submitJobId").addEventListener("click", function() {
+    var jobId = document.getElementById("job_id").value;
+
+    $.ajax({
+      url: 'http://localhost:8080/api/employees/getEmployeesByJobId/' + jobId,
+      type: 'GET',
+      contentType: 'application/json',
+      success: function(response) {
+        if(response.success) {
+          var employeesHtml = '';
+          response.employees.forEach(function(employee) {
+            employeesHtml += '<div>' +
+                    '<p>ID: ' + employee.id + '</p>' +
+                    '<p>Name: ' + employee.name + '</p>' +
+                    '<p>Last Name: ' + employee.lastName + '</p>' +
+                    '<p>Birthdate: ' + employee.birthdate + '</p>' +
+                    '<p>Job: ' + ' (ID: ' + employee.job.id + ', Name: ' + employee.job.name + ', Salary: ' + employee.job.salary + ')</p>' +
+                    '<p>Gender: ' + ' (ID: ' + employee.gender.id + ', Name: ' + employee.gender.name + ')</p>' +
+                    '</div>';
+          });
+          response.hasOwnProperty("success").valueOf() ? alert(JSON.stringify(response)) : alert(response.error);
+          document.getElementById("employeesList").innerHTML = employeesHtml;
+        } else {
+          alert('Failed to fetch employees.');
+        }
+      },
+      error: function() {
+        alert('Error fetching employees.');
+      }
+    });
+  });
+</script>
+</body>
+</html>
